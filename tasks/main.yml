@@ -1,0 +1,30 @@
+---
+# tasks file for gitlab
+
+## part 1
+- yum: name={{ item }}
+  with_items:
+    - curl
+    - openssh-server
+
+# - command: systemctl enable sshd
+# - command: systemctl start sshd
+- service: name=sshd state=started enabled=yes
+
+- yum: name=postfix
+
+# - command: systemctl enable postfix
+# - command: systemctl start postfix
+- service: name=postfix state=started enabled=yes
+
+- command: firewall -cmd --permanent --add-service=http
+
+- command: systemctl reload firewalld
+
+## part 2
+
+- shell: curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
+
+- yum: name=gitlab-ce state=latest
+
+# - command: gitlab-ctl reconfigure
